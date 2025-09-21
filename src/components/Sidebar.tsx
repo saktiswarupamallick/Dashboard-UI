@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { ChevronRightIcon } from './Icons';
 import { THEME_CLASSES } from '../utils/theme';
 import { useApp } from '../contexts/AppContext';
+import byeWindLogo from '../assets/ByeWind.svg';
 
 import DefaultIcon from './icons/DefaultIcon';
 import EcommerceIcon from './icons/EcommerceIcon';
@@ -297,8 +298,8 @@ const Sidebar: React.FC = React.memo(() => {
         <div className="flex items-center justify-between p-4">
           {state.sidebarOpen ? (
             <Link to="/dashboard" className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200">
-              
-              <h1 className="text-gray-900 dark:text-white text-xl">ByeWind</h1>
+              <img src={byeWindLogo} alt="ByeWind" className="w-8 h-8" />
+              <h1 className="text-gray-900 dark:text-white text-secondary text-lg">ByeWind</h1>
             </Link>
           ) : (
             <Link to="/dashboard" className="flex items-center justify-center w-full hover:opacity-80 transition-opacity duration-200">
