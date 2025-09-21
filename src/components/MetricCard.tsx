@@ -33,7 +33,7 @@ const MetricCard: React.FC<MetricCardProps> = React.memo(({ metric, className = 
     <div className={`${cardClasses} ${className}`} style={{ padding: '16px' }}>
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div className="flex-1">
-          <div className="flex items-center space-x-3 mb-3 sm:mb-4">
+          <div className="flex items-center space-x-3 mb-3 ml-2 sm:mb-4">
             <h3 className={`text-sm font-medium ${
               variant === 'light-blue' || variant === 'light-purple' 
                 ? 'text-gray-600 dark:text-black' 

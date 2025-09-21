@@ -273,7 +273,7 @@ const OrderTable: React.FC<OrderTableProps> = React.memo(({ orders }) => {
                 <select
                   value={filters.status}
                   onChange={(e) => handleFilterChange('status', e.target.value)}
-                  className={`w-full px-3 py-2 border ${THEME_CLASSES.BORDER_DEFAULT} rounded-lg ${THEME_CLASSES.DASHBOARD_BG} ${THEME_CLASSES.TEXT_PRIMARY} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full px-3 text-secondary py-2 border ${THEME_CLASSES.BORDER_DEFAULT} rounded-lg ${THEME_CLASSES.DASHBOARD_BG} ${THEME_CLASSES.TEXT_PRIMARY} focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 >
                   <option value="">All Statuses</option>
                   <option value="In Progress">In Progress</option>
@@ -294,7 +294,7 @@ const OrderTable: React.FC<OrderTableProps> = React.memo(({ orders }) => {
                     const value = e.target.value === '' ? null : e.target.value === 'true';
                     handleFilterChange('hasDocument', value);
                   }}
-                  className={`w-full px-3 py-2 border ${THEME_CLASSES.BORDER_DEFAULT} rounded-lg ${THEME_CLASSES.DASHBOARD_BG} ${THEME_CLASSES.TEXT_PRIMARY} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full px-3 text-secondary py-2 border ${THEME_CLASSES.BORDER_DEFAULT} rounded-lg ${THEME_CLASSES.DASHBOARD_BG} ${THEME_CLASSES.TEXT_PRIMARY} focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 >
                   <option value="">All</option>
                   <option value="true">Has Document</option>

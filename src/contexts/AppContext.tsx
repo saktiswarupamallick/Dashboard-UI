@@ -82,9 +82,20 @@ type AppAction =
   | { type: 'RESET_FILTERS' }
   | { type: 'HYDRATE_STATE'; payload: Partial<AppState> };
 
+
+const getInitialSidebarState = () => {
+  if (typeof window === 'undefined') return false; 
+  return window.innerWidth >= 1024; 
+};
+
+const getInitialActivitySidebarState = () => {
+  if (typeof window === 'undefined') return false; 
+  return window.innerWidth >= 1280; 
+};
+
 const initialState: AppState = {
-  sidebarOpen: true,
-  activitySidebarOpen: true,
+  sidebarOpen: getInitialSidebarState(),
+  activitySidebarOpen: getInitialActivitySidebarState(),
   searchQuery: '',
   
   notifications: initialNotifications,
@@ -159,7 +170,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
       };
       return {
         ...state,
-        notifications: [newNotification, ...state.notifications].slice(0, 50), // Keep max 50 notifications
+        notifications: [newNotification, ...state.notifications].slice(0, 50), 
       };
     
     case 'REMOVE_NOTIFICATION':
@@ -243,7 +254,16 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     if (savedState) {
       try {
         const parsedState = JSON.parse(savedState);
-        dispatch({ type: 'HYDRATE_STATE', payload: parsedState });
+        
+  
+        const currentWidth = window.innerWidth;
+        const responsiveState = {
+          ...parsedState,
+          sidebarOpen: currentWidth >= 1024 ? parsedState.sidebarOpen : false,
+          activitySidebarOpen: currentWidth >= 1280 ? parsedState.activitySidebarOpen : false,
+        };
+        
+        dispatch({ type: 'HYDRATE_STATE', payload: responsiveState });
       } catch (error) {
         console.warn('Failed to parse saved app state:', error);
       }
@@ -260,6 +280,30 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     };
     localStorage.setItem('dashboard-app-state', JSON.stringify(stateToSave));
   }, [state.sidebarOpen, state.activitySidebarOpen, state.preferences, state.orderFilters, state.productSort]);
+
+
+  useEffect(() => {
+    let previousWidth = window.innerWidth;
+    
+    const handleResize = () => {
+      const currentWidth = window.innerWidth;
+      
+   
+      if (previousWidth >= 1024 && currentWidth < 1024 && state.sidebarOpen) {
+        dispatch({ type: 'TOGGLE_SIDEBAR' });
+      }
+      
+      if (previousWidth >= 1280 && currentWidth < 1280 && state.activitySidebarOpen) {
+        dispatch({ type: 'TOGGLE_ACTIVITY_SIDEBAR' });
+      }
+      
+      previousWidth = currentWidth;
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, [state.sidebarOpen, state.activitySidebarOpen]);
 
   const unreadNotificationsCount = state.notifications.filter(n => !n.read).length;
   
@@ -294,8 +338,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     return 0;
   });
 
-  const toggleSidebar = () => dispatch({ type: 'TOGGLE_SIDEBAR' });
-  const toggleActivitySidebar = () => dispatch({ type: 'TOGGLE_ACTIVITY_SIDEBAR' });
+  const toggleSidebar = () => {
+    console.log('Toggle Sidebar called - Current state:', state.sidebarOpen);
+    dispatch({ type: 'TOGGLE_SIDEBAR' });
+  };
+  const toggleActivitySidebar = () => {
+    console.log('Toggle Activity Sidebar called - Current state:', state.activitySidebarOpen);
+    dispatch({ type: 'TOGGLE_ACTIVITY_SIDEBAR' });
+  };
   const setSearchQuery = (query: string) => dispatch({ type: 'SET_SEARCH_QUERY', payload: query });
   const markNotificationRead = (id: string) => dispatch({ type: 'MARK_NOTIFICATION_READ', payload: id });
   const clearAllNotifications = () => dispatch({ type: 'CLEAR_ALL_NOTIFICATIONS' });
