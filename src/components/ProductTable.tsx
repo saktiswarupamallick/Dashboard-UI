@@ -10,7 +10,7 @@ interface ProductTableProps {
 }
 
 const columns: TableColumn[] = [
-  { key: 'name', label: 'Name', sortable: true },
+  { key: 'name', label: 'Name', sortable: true, width: '150px' },
   { key: 'price', label: 'Price', sortable: true, width: '120px' },
   { key: 'quantity', label: 'Quantity', sortable: true, width: '100px' },
   { key: 'amount', label: 'Amount', sortable: true, width: '120px' }
@@ -33,7 +33,7 @@ const ProductTable: React.FC<ProductTableProps> = ({ products, className = '' })
   };
 
   const processedData = useMemo(() => {
-    let sorted = sortData(products, sortKey, sortDirection);
+    const sorted = sortData(products, sortKey, sortDirection);
     return paginateData(sorted, currentPage, pageSize);
   }, [products, sortKey, sortDirection, currentPage, pageSize]);
 
@@ -49,19 +49,18 @@ const ProductTable: React.FC<ProductTableProps> = ({ products, className = '' })
   return (
     <div className={`h-full flex flex-col p-6 ${className} ${THEME_CLASSES.CARD_BG} rounded-2xl`}>
       <div className="flex items-center justify-between mb-6">
-        <h3 className={`text-lg font-semibold ${THEME_CLASSES.TEXT_PRIMARY}`}>Top Selling Products</h3>
+        <h3 className="text-gray-900 text-secondary dark:text-white">Top Selling Products</h3>
       </div>
 
       <div className="flex-1 overflow-hidden rounded-lg">
-        <table className="w-full">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[400px]">
           <thead >
             <tr>
               {columns.map((column) => (
                 <th
                   key={column.key}
-                  className={`px-4 py-3 text-left text-sm font-medium ${THEME_CLASSES.TEXT_SECONDARY} ${
-                    column.sortable ? `cursor-pointer ${THEME_CLASSES.HOVER_BG} group` : ''
-                  }`}
+                  className={`px-3 sm:px-4 py-3 text-left text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap`}
                   style={{ width: column.width }}
                   onClick={() => column.sortable && handleSort(column.key as keyof Product)}
                 >
@@ -73,6 +72,13 @@ const ProductTable: React.FC<ProductTableProps> = ({ products, className = '' })
               ))}
             </tr>
           </thead>
+          
+          <tr>
+            <td colSpan={4} className="px-0">
+              <div className="w-full h-[1px] bg-gray-300 dark:bg-gray-500"></div>
+            </td>
+          </tr>
+          
           <tbody >
             {processedData.items.map((product, index) => (
               <tr 
@@ -83,30 +89,31 @@ const ProductTable: React.FC<ProductTableProps> = ({ products, className = '' })
                   animation: 'slideUp 0.3s ease-out forwards'
                 }}
               >
-                <td className="px-4 py-4">
+                <td className="px-3 sm:px-4 py-4 whitespace-nowrap">
                   <div className="flex items-center space-x-3">
                     <div>
-                      <div className={`text-sm font-medium ${THEME_CLASSES.TEXT_PRIMARY}`}>
+                      <div className={`text-sm  ${THEME_CLASSES.TEXT_PRIMARY}`}>
                         {product.name}
                       </div>
                     </div>
                   </div>
                 </td>
-                <td className={`px-4 py-4 text-sm ${THEME_CLASSES.TEXT_PRIMARY} font-medium`}>
+                <td className={`px-3 sm:px-4 py-4 text-sm ${THEME_CLASSES.TEXT_PRIMARY} whitespace-nowrap`}>
                   {formatCurrency(product.price)}
                 </td>
-                <td className={`px-4 py-4 text-sm ${THEME_CLASSES.TEXT_PRIMARY}`}>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                <td className={`px-3 sm:px-4 py-4 text-sm ${THEME_CLASSES.TEXT_PRIMARY} whitespace-nowrap`}>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs ">
                     {product.quantity}
                   </span>
                 </td>
-                <td className={`px-4 py-4 text-sm font-semibold ${THEME_CLASSES.TEXT_PRIMARY}`}>
+                <td className={`px-3 sm:px-4 py-4 text-sm  ${THEME_CLASSES.TEXT_PRIMARY} whitespace-nowrap`}>
                   {formatCurrency(product.amount)}
                 </td>
               </tr>
             ))}
           </tbody>
-        </table>
+          </table>
+        </div>
       </div>
 
       {processedData.totalPages > 1 && (

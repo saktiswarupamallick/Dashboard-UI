@@ -18,7 +18,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ data, className = '' }) => {
     {
       name: 'Direct',
       value: data.direct,
-      color: '#111827'
+      color: isDark ? 'rgba(149, 164, 252, 1)' : '#111827'
     },
     {
       name: 'Affiliate',
@@ -41,7 +41,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ data, className = '' }) => {
   return (
     <div className={`h-full flex ${THEME_CLASSES.CARD_BG} rounded-2xl flex-col p-6 ${className}`}>
       <div className="flex items-center justify-between mb-6">
-        <h3 className={`text-lg font-semibold ${THEME_CLASSES.TEXT_PRIMARY}`}>Total Sales</h3>
+        <h3 className="text-gray-900 text-secondary dark:text-white">Total Sales</h3>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center">
@@ -56,7 +56,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ data, className = '' }) => {
                 outerRadius={85}
                 paddingAngle={3}
                 dataKey="value"
-                cornerRadius={12}
+                cornerRadius={14}
                 startAngle={90}
                 endAngle={450}
               >

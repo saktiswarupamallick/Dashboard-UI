@@ -52,6 +52,7 @@ export interface NotificationItem {
   title: string;
   message: string;
   time: string;
+  timestamp?: number; // For proper sorting
   read: boolean;
   type: 'info' | 'success' | 'warning' | 'error';
   iconType: 'bug' | 'user' | 'subscribe';

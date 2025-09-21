@@ -1,7 +1,7 @@
 import React from 'react';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import type { ChartDataPoint } from '../types';
-import { THEME_CLASSES, getChartColors, getTooltipStyles, formatChartValue } from '../utils/theme';
+import { THEME_CLASSES, getChartColors, formatChartValue } from '../utils/theme';
 import { useTheme } from '../contexts/ThemeContext';
 
 interface BarChartProps {
@@ -19,7 +19,6 @@ const BarChart: React.FC<BarChartProps> = ({
 }) => {
   const { isDark } = useTheme();
   const chartColors = getChartColors(isDark);
-  const tooltipStyles = getTooltipStyles(isDark);
   
   const chartData = data.map((projection, index) => ({
     name: projection.name,
@@ -31,7 +30,7 @@ const BarChart: React.FC<BarChartProps> = ({
   return (
     <div className={`rounded-2xl ${THEME_CLASSES.CARD_BG} ${className}`} style={{ padding: '14px' }}>
       <div className="flex justify-start mb-2">
-        <h3 className={`text-lg font-semibold ${THEME_CLASSES.TEXT_PRIMARY}`}>{title}</h3>
+        <h3 className="text-gray-900 dark:text-white">{title}</h3>
       </div>
 
       <div style={{ height: '200px' }}>
@@ -41,7 +40,7 @@ const BarChart: React.FC<BarChartProps> = ({
             
             barCategoryGap="20%"
           >
-            <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} vertical={false} />
             <XAxis 
               dataKey="name" 
               axisLine={false}
@@ -60,7 +59,11 @@ const BarChart: React.FC<BarChartProps> = ({
               }}
             />
             <Tooltip 
-              contentStyle={tooltipStyles}
+              contentStyle={{
+                background: 'transparent',
+                border: 'none',
+                boxShadow: 'none'
+              }}
               formatter={(value: number, name: string) => {
                 const formattedValue = formatChartValue(value);
                 return [formattedValue, name === 'actual' ? 'Actuals' : 'Projections'];

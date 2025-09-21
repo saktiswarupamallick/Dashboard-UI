@@ -1,8 +1,7 @@
-import React from 'react';
-
+import React, { useMemo } from 'react';
 import type { MetricCard as MetricCardType } from '../types';
-import upArrowMetrics from "../assets/upArrowMetrics.png";
-import downArrowMetrics from "../assets/downArrowMetrics.png";
+import UpArrowIcon from './icons/UpArrowIcon';
+import DownArrowIcon from './icons/DownArrowIcon';
 
 interface MetricCardProps {
   metric: MetricCardType;
@@ -10,64 +9,86 @@ interface MetricCardProps {
   variant?: 'default' | 'blue' | 'light-blue' | 'light-gray' | 'light-purple';
 }
 
-
-
-const MetricCard: React.FC<MetricCardProps> = ({ metric, className = '', variant = 'default' }) => {
-
+const MetricCard: React.FC<MetricCardProps> = React.memo(({ metric, className = '', variant = 'default' }) => {
   const isPositive = metric.changeType === 'increase';
   
-  const getCardClasses = () => {
-    const baseClasses = 'hover:shadow-md transition-all duration-300 group rounded-2xl';
+  const cardClasses = useMemo(() => {
+    const baseClasses = 'hover:shadow-md transition-all duration-300 group rounded-2xl w-full';
     
     switch (variant) {
       case 'blue':
         return `${baseClasses} bg-blue-50 dark:bg-blue-900/20`;
       case 'light-blue':
-        return `${baseClasses} bg-[#E3F5FF] dark:bg-blue-900/20`;
+        return `${baseClasses} bg-[#E3F5FF] dark:bg-[rgba(227,245,255,1)]`;
       case 'light-gray':
-        return `${baseClasses} bg-[#F7F9FB] dark:bg-gray-800/20`;
+        return `${baseClasses} bg-[#F7F9FB] dark:bg-[#FFFFFF0D]`;
       case 'light-purple':
-        return `${baseClasses} bg-[#E5ECF6] dark:bg-purple-900/20`;
+        return `${baseClasses} bg-[#E5ECF6] dark:bg-[rgba(227,245,255,1)]`;
       default:
         return baseClasses;
     }
-  };
+  }, [variant]);
   
   return (
-    <div className={`${getCardClasses()} ${className}`} style={{ padding: '24px' }}>
-      <div className="flex items-start justify-between ">
+    <div className={`${cardClasses} ${className}`} style={{ padding: '16px' }}>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div className="flex-1">
-          <div className="flex items-center space-x-3 mb-4">
-           
-            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">
+          <div className="flex items-center space-x-3 mb-3 sm:mb-4">
+            <h3 className={`text-sm font-medium ${
+              variant === 'light-blue' || variant === 'light-purple' 
+                ? 'text-gray-600 dark:text-black' 
+                : 'text-gray-600 dark:text-white'
+            }`}>
               {metric.title}
             </h3>
           </div>
           
-          <div className=" flex  space-y-2">
-            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+          <div className={`flex flex-col sm:flex-row sm:items-center gap-2  px-2 sm:px-3 py-1 rounded-lg bg-transparent group-hover:flex-row-reverse transition-all duration-300 ${
+            variant === 'light-blue' || variant === 'light-purple'
+              ? 'group-hover:bg-gray-100 dark:group-hover:bg-blue-100'
+              : 'group-hover:bg-gray-100 dark:group-hover:bg-zinc-800'
+          }`}>
+            <div className={`text-xl sm:text-2xl font-bold transition-all duration-300 ${
+              variant === 'light-blue' || variant === 'light-purple' 
+                ? 'text-gray-900 dark:text-black ' 
+                : 'text-gray-900 dark:text-white '
+            }`}>
               {metric.value}
             </div>
             
-            <div className="flex  space-x-1 ml-2 items-center ">
-             
-              <span className={`text-sm font-medium `}
-                >
+            <div className="flex items-center space-x-1">
+              <span className={`text-sm font-medium ${
+                variant === 'light-blue' || variant === 'light-purple' 
+                  ? 'text-gray-900 dark:text-black' 
+                  : 'text-gray-900 dark:text-white'
+              }`}>
                 {isPositive ? '+' : ''}{metric.change.toFixed(2)}%
               </span>
               {isPositive ? (
-                <img src={upArrowMetrics} alt="up arrow" />
+                <UpArrowIcon 
+                  size={16} 
+                  className={`${
+                    variant === 'light-blue' || variant === 'light-purple' 
+                      ? 'text-gray-900 dark:text-gray-700' 
+                      : 'text-gray-900 dark:text-white'
+                  }`}
+                />
               ) : (
-                <img src={downArrowMetrics} alt="down arrow" />
+                <DownArrowIcon 
+                  size={16} 
+                  className={`${
+                    variant === 'light-blue' || variant === 'light-purple' 
+                      ? 'text-gray-900 dark:text-gray-600' 
+                      : 'text-gray-900 dark:text-white'
+                  }`}
+                />
               )}
             </div>
           </div>
         </div>
-        
-        
       </div>
     </div>
   );
-};
+});
 
 export default MetricCard;

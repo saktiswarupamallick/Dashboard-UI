@@ -12,20 +12,20 @@ const WorldMap: React.FC<WorldMapProps> = ({ data, className = '' }) => {
   const [hoveredLocation, setHoveredLocation] = useState<LocationData | null>(null);
 
   const locations = [
-    { name: 'New York', x: 240, y: 120, data: data.find(d => d.name === 'New York') },
+    { name: 'New York', x: 190, y: 140, data: data.find(d => d.name === 'New York') },
     { name: 'San Francisco', x: 80, y: 140, data: data.find(d => d.name === 'San Francisco') },
-    { name: 'Sydney', x: 500, y: 280, data: data.find(d => d.name === 'Sydney') },
-    { name: 'Singapore', x: 480, y: 200, data: data.find(d => d.name === 'Singapore') }
+    { name: 'Sydney', x: 500, y: 220, data: data.find(d => d.name === 'Sydney') },
+    { name: 'Singapore', x: 440, y: 170, data: data.find(d => d.name === 'Singapore') }
   ];
 
   return (
     <div className={`h-full flex flex-col ${THEME_CLASSES.CARD_BG} rounded-2xl ${className}`} style={{ padding: '24px' }}>
       <div className="flex items-center justify-between mb-6">
-        <h3 className={`text-lg font-semibold ${THEME_CLASSES.TEXT_PRIMARY}`}>Revenue by Location</h3>
+        <h3 className="text-gray-900 text-secondary dark:text-white">Revenue by Location</h3>
       </div>
 
       <div className="relative mb-6">
-        <div className="w-full h-32 rounded-lg overflow-hidden">
+        <div className="w-full  rounded-lg overflow-hidden">
           <img 
             src={MapSvg} 
             alt="World Map" 
@@ -47,7 +47,7 @@ const WorldMap: React.FC<WorldMapProps> = ({ data, className = '' }) => {
                 onMouseEnter={() => setHoveredLocation(location.data!)}
                 onMouseLeave={() => setHoveredLocation(null)}
               >
-                <div className={`w-3 h-3 ${THEME_CLASSES.TEXT_PRIMARY} rounded-full border-2 border-white shadow-lg`}></div>
+                <div className={`w-3 h-3  rounded-full border-2 dark:bg-purple-300 bg-black border-white shadow-lg`}></div>
               </div>
             );
           })}
@@ -64,7 +64,7 @@ const WorldMap: React.FC<WorldMapProps> = ({ data, className = '' }) => {
               <div className={`text-sm font-medium ${THEME_CLASSES.TEXT_PRIMARY}`}>
                 {hoveredLocation.name}
               </div>
-              <div className="text-sm text-blue-600">
+              <div className="text-sm text-blue-600 dark:text-blue-400">
                 {hoveredLocation.percentage}
               </div>
             </div>
@@ -82,7 +82,7 @@ const WorldMap: React.FC<WorldMapProps> = ({ data, className = '' }) => {
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <div className=" bg-#A8C5DA rounded-full"></div>
+                
                 <span className={`text-sm font-normal ${THEME_CLASSES.TEXT_PRIMARY}`}>
                   {location.name}
                 </span>

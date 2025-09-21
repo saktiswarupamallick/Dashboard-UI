@@ -1,5 +1,5 @@
 import React from 'react';
-import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import type { RevenueData } from '../types';
 import { formatCurrency } from '../utils';
 import { THEME_CLASSES, getChartColors, getTooltipStyles, formatChartValue } from '../utils/theme';
@@ -18,54 +18,63 @@ const RevenueChart: React.FC<RevenueChartProps> = ({ data, className = '' }) => 
   if (!data.length) return null;
 
   const chartData = data.map(item => ({
-    name: item.date === 'Current Week' ? 'Current' : item.date,
+    name: item.date,
     current: item.current,
     previous: item.previous
   }));
 
-  const currentWeek = data[0];
+ 
 
 
   return (
-    <div className={`h-full flex flex-col p-6 ${THEME_CLASSES.CARD_BG} rounded-2xl ${className}`}>
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className={`text-lg font-semibold ${THEME_CLASSES.TEXT_PRIMARY}`}>Revenue</h3>
-          <div className="flex items-center space-x-4">
+    <div className={`h-full flex flex-col p-4 sm:p-6 ${THEME_CLASSES.CARD_BG} rounded-2xl ${className}`}>
+      <div className="mb-4 sm:mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center  gap-2 sm:gap-4 mb-2">
+          <h3 className="text-gray-900 text-secondary dark:text-white">Revenue</h3>
+          
+          <div className="hidden sm:block w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
+          
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
             <div className="flex items-center space-x-2">
-              <div className={`w-3 h-0.5 ${THEME_CLASSES.TEXT_PRIMARY} rounded`}></div>
-              <span className={`text-sm ${THEME_CLASSES.TEXT_SECONDARY}`}>Current Week {formatCurrency(currentWeek.current)}</span>
+              <div className={`w-3 h-3 rounded-full ${isDark ? 'bg-[rgba(198,199,248,1)]' : 'bg-gray-900'}`}></div>
+              <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Current Week {formatCurrency(58211)}</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-3 h-0.5 bg-blue-300 rounded"></div>
-              <span className={`text-sm ${THEME_CLASSES.TEXT_SECONDARY}`}>Previous Week {formatCurrency(currentWeek.previous)}</span>
+              <div className="w-3 h-3 rounded-full bg-blue-300"></div>
+              <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Previous Week {formatCurrency(58768)}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 min-h-[200px] sm:min-h-[250px]">
         <ResponsiveContainer width="100%" height="100%">
-          <RechartsLineChart
+          <AreaChart
             data={chartData}
             margin={{
-              top: 20,
-              right: 30,
-              left: 20,
-              bottom: 5,
+              top: 10,
+              right: 10,
+              left: 10,
+              bottom: 10,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+            <defs>
+              <linearGradient id="currentGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={isDark ? 'rgba(198,199,248,0.4)' : 'rgba(59, 130, 246, 0.4)'} stopOpacity={0.4}/>
+                <stop offset="95%" stopColor={isDark ? 'rgba(198,199,248,0.1)' : 'rgba(59, 130, 246, 0.1)'} stopOpacity={0.1}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} vertical={false} />
             <XAxis 
               dataKey="name" 
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 12, fill: chartColors.text }}
+              tick={{ fontSize: 10, fill: chartColors.text }}
             />
             <YAxis 
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 12, fill: chartColors.text }}
+              tick={{ fontSize: 10, fill: chartColors.text }}
               tickFormatter={(value) => formatChartValue(value)}
             />
             <Tooltip 
@@ -75,6 +84,15 @@ const RevenueChart: React.FC<RevenueChartProps> = ({ data, className = '' }) => 
                 return [formattedValue, name === 'current' ? 'Current Week' : 'Previous Week'];
               }}
             />
+            <Area
+              type="monotone"
+              dataKey="current"
+              stroke={isDark ? 'rgba(198,199,248,1)' : chartColors.secondary}
+              strokeWidth={3}
+              fill="url(#currentGradient)"
+              dot={{ fill: isDark ? 'rgba(198,199,248,1)' : chartColors.secondary, strokeWidth: 2, r: 4 }}
+              activeDot={{ r: 6 }}
+            />
             <Line 
               type="monotone" 
               dataKey="previous" 
@@ -83,15 +101,7 @@ const RevenueChart: React.FC<RevenueChartProps> = ({ data, className = '' }) => 
               dot={{ fill: chartColors.primary, strokeWidth: 2, r: 4 }}
               activeDot={{ r: 6 }}
             />
-            <Line 
-              type="monotone" 
-              dataKey="current" 
-              stroke={chartColors.secondary} 
-              strokeWidth={3}
-              dot={{ fill: chartColors.secondary, strokeWidth: 2, r: 4 }}
-              activeDot={{ r: 6 }}
-            />
-          </RechartsLineChart>
+          </AreaChart>
         </ResponsiveContainer>
       </div>
     </div>

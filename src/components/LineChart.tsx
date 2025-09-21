@@ -19,7 +19,7 @@ const LineChart: React.FC<LineChartProps> = ({
   className = '' 
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const [hoveredPoint, setHoveredPoint] = useState<{ x: number; y: number; data: any } | null>(null);
+  const [hoveredPoint, setHoveredPoint] = useState<{ x: number; y: number; data: { name: string; projected: number; actual?: number } } | null>(null);
   const [animationProgress, setAnimationProgress] = useState(0);
 
   useEffect(() => {
